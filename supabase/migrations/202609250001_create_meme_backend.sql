@@ -153,6 +153,7 @@ create policy "Users can manage own view history" on public.meme_view_history fo
 create policy "Users can manage own search history" on public.search_history for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "Users can create own meme suggestions" on public.meme_edit_suggestions for insert with check (auth.uid() = user_id);
 create policy "Users can read own meme suggestions" on public.meme_edit_suggestions for select using (auth.uid() = user_id);
+create policy "Anonymous users can create meme suggestions" on public.meme_edit_suggestions for insert with check (user_id is null);
 
 create or replace function public.handle_new_user()
 returns trigger

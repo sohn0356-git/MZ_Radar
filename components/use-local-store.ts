@@ -28,17 +28,20 @@ const initial: StoreState = {
 
 export function useLocalStore() {
   const [state, setState] = useState<StoreState>(initial);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const raw = window.localStorage.getItem(key);
     if (raw) {
       setState({ ...initial, ...JSON.parse(raw) });
     }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     window.localStorage.setItem(key, JSON.stringify(state));
-  }, [state]);
+  }, [hydrated, state]);
 
   const toggleSave = useCallback((id: string) => {
     setState((current) => ({

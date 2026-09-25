@@ -165,7 +165,7 @@ export async function fetchUserHistory(userId: string) {
 }
 
 export async function submitMemeSuggestion(userId: string | null, input: MemeSuggestionInput) {
-  if (useMockData || !supabase || !userId) return false;
+  if (!supabase || !isSupabaseConfigured) return false;
   const aliases = input.aliases
     .split(",")
     .map((alias) => alias.trim())

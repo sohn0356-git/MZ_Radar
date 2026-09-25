@@ -14,6 +14,7 @@ export function ProfileView({
   savedIds,
   viewedIds,
   searches,
+  suggestions,
   user,
   displayName,
   authConfigured,
@@ -27,6 +28,14 @@ export function ProfileView({
   savedIds: string[];
   viewedIds: string[];
   searches: string[];
+  suggestions: {
+    title: string;
+    aliases: string;
+    meaning: string;
+    origin: string;
+    referenceUrl: string;
+    createdAt: string;
+  }[];
   user: User | null;
   displayName: string;
   authConfigured: boolean;
@@ -95,6 +104,26 @@ export function ProfileView({
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="profile-panel">
+        <h2>내 제안</h2>
+        {suggestions.length ? (
+          <div className="suggestion-list">
+            {suggestions.map((item) => (
+              <article className="suggestion-row" key={`${item.title}-${item.createdAt}`}>
+                <div>
+                  <strong>{item.title}</strong>
+                  <p>{item.meaning}</p>
+                  <a href={item.referenceUrl} target="_blank" rel="noreferrer">출처 확인</a>
+                </div>
+                <span className="badge">검토 대기</span>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="muted" style={{ margin: 0 }}>아직 제안한 밈이 없습니다.</p>
+        )}
       </div>
 
       <div className="profile-panel">

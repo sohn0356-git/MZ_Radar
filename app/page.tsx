@@ -129,13 +129,10 @@ export default function Home() {
   };
 
   const suggestMeme = async (input: MemeSuggestionInput) => {
-    if (isUsingMockData || !auth.user) {
-      store.addSuggestion(input);
-      return "local" as const;
-    }
     try {
-      await submitMemeSuggestion(auth.user.id, input);
-      return "remote" as const;
+      const savedToSupabase = await submitMemeSuggestion(auth.user?.id || null, input);
+      store.addSuggestion(input);
+      return savedToSupabase ? "remote" as const : "local" as const;
     } catch {
       store.addSuggestion(input);
       return "local" as const;
@@ -195,6 +192,7 @@ export default function Home() {
             savedIds={savedIds}
             viewedIds={viewedIds}
             searches={searches}
+            suggestions={store.suggestions}
             user={auth.user}
             displayName={displayNameFor(auth.user)}
             authConfigured={auth.configured}
