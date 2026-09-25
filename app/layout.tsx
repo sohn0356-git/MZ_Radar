@@ -2,11 +2,13 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AppProviders } from "@/components/app-providers";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 export const metadata: Metadata = {
   title: "밈레이더",
   description: "요즘 모두가 말하는 밈을 놓치지 마세요.",
   applicationName: "밈레이더",
-  manifest: "/manifest.webmanifest",
+  manifest: `${basePath}/manifest.webmanifest`,
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -14,9 +16,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icons/icon.svg", type: "image/svg+xml", sizes: "any" }
+      { url: `${basePath}/icons/icon.svg`, type: "image/svg+xml", sizes: "any" }
     ],
-    apple: [{ url: "/icons/icon.svg", sizes: "any" }]
+    apple: [{ url: `${basePath}/icons/icon.svg`, sizes: "any" }]
   }
 };
 
