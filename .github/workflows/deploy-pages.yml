@@ -34,6 +34,9 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /MZ_Radar
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_USE_SUPABASE: ${{ secrets.NEXT_PUBLIC_USE_SUPABASE }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
