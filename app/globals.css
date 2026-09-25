@@ -486,6 +486,34 @@ a {
   object-fit: cover;
 }
 
+.reference-panel,
+.feed-empty {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #f4efe5;
+  color: var(--ink);
+}
+
+.reference-panel {
+  grid-template-columns: 28px 1fr;
+  align-items: start;
+}
+
+.reference-panel p,
+.feed-empty p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.feed-empty {
+  min-height: 360px;
+  place-content: center;
+  text-align: center;
+}
+
 .video-thumb span {
   position: absolute;
   left: 12px;

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Bookmark, ExternalLink, Play, Share2 } from "lucide-react";
+import { ArrowLeft, Bookmark, ExternalLink, FileText, Play, Share2 } from "lucide-react";
 import type { Meme } from "@/lib/types";
 import { MemeCard } from "@/components/meme-card";
 
@@ -85,22 +85,36 @@ export function MemeDetail({
       </Section>
 
       <Section title="Original YouTube Video">
-        <div className="video-embed">
-          {primarySource?.youtubeVideoId ? (
-            <iframe
-              src={`${youtubeUrl}${youtubeUrl.includes("?") ? "&" : "?"}rel=0&playsinline=1`}
-              title={primarySource.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : (
-            <img src={heroImage} alt="" />
-          )}
-        </div>
-        <a className="secondary-btn" href={primarySource?.sourceUrl || "#"} target="_blank" rel="noreferrer" style={{ marginTop: 10 }}>
-          <Play size={16} fill="currentColor" />
-          Open in YouTube
-        </a>
+        {primarySource?.youtubeVideoId ? (
+          <>
+            <div className="video-embed">
+              <iframe
+                src={`${youtubeUrl}${youtubeUrl.includes("?") ? "&" : "?"}rel=0&playsinline=1`}
+                title={primarySource.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <a className="secondary-btn" href={primarySource.sourceUrl} target="_blank" rel="noreferrer" style={{ marginTop: 10 }}>
+              <Play size={16} fill="currentColor" />
+              Open in YouTube
+            </a>
+          </>
+        ) : (
+          <div className="reference-panel">
+            <FileText size={22} />
+            <div>
+              <strong>No verified YouTube video yet</strong>
+              <p>정확히 매칭되는 원본/대표 영상이 확인되기 전까지 앱은 임의 영상을 재생하지 않습니다.</p>
+            </div>
+          </div>
+        )}
+        {primarySource?.youtubeVideoId ? null : primarySource?.sourceUrl ? (
+          <a className="secondary-btn" href={primarySource.sourceUrl} target="_blank" rel="noreferrer" style={{ marginTop: 10 }}>
+            <ExternalLink size={16} />
+            Open reference
+          </a>
+        ) : null}
         <p style={{ marginTop: 10 }}>
           {primarySource?.title || "Source"} · {primarySource?.sourceType || "reference"}
           <br />

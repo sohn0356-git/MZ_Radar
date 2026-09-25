@@ -59,21 +59,29 @@ export function FeedView({
           </button>
         ))}
       </div>
-      <div className="feed-list" ref={containerRef}>
-        {visibleItems.map(({ item, meme }, index) => (
-          <FeedCard
-            key={`${item.id}-${index}`}
-            item={item}
-            meme={meme}
-            active={index === activeIndex}
-            muted={muted}
-            saved={savedIds.includes(meme.id)}
-            onToggleMute={() => setMuted((current) => !current)}
-            onToggleSave={() => onToggleSave(meme.id)}
-            onOpen={() => onOpenMeme(meme)}
-          />
-        ))}
-      </div>
+      {!visibleItems.length && (
+        <div className="feed-empty">
+          <strong>No verified feed media yet</strong>
+          <p>정확한 이미지나 영상 소스가 확인된 밈만 피드에 표시합니다.</p>
+        </div>
+      )}
+      {visibleItems.length > 0 && (
+        <div className="feed-list" ref={containerRef}>
+          {visibleItems.map(({ item, meme }, index) => (
+            <FeedCard
+              key={`${item.id}-${index}`}
+              item={item}
+              meme={meme}
+              active={index === activeIndex}
+              muted={muted}
+              saved={savedIds.includes(meme.id)}
+              onToggleMute={() => setMuted((current) => !current)}
+              onToggleSave={() => onToggleSave(meme.id)}
+              onOpen={() => onOpenMeme(meme)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

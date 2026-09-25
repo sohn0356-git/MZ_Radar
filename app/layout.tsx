@@ -16,9 +16,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: `${basePath}/icons/icon.svg`, type: "image/svg+xml", sizes: "any" }
+      { url: `${basePath}/icons/icon.svg`, type: "image/svg+xml", sizes: "any" },
+      { url: `${basePath}/icons/icon-192.png`, type: "image/png", sizes: "192x192" },
+      { url: `${basePath}/icons/icon-512.png`, type: "image/png", sizes: "512x512" }
     ],
-    apple: [{ url: `${basePath}/icons/icon.svg`, sizes: "any" }]
+    apple: [{ url: `${basePath}/icons/icon-192.png`, sizes: "192x192" }]
   }
 };
 

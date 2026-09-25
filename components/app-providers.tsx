@@ -8,7 +8,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register(`${basePath}/sw.js`, { scope: `${basePath || "/"}` })
+        .register(`${basePath}/sw.js`, { scope: `${basePath || ""}/` })
         .catch(() => undefined);
     }
   }, []);

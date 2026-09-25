@@ -1,4 +1,4 @@
-export type TrendStatus = "new" | "rising" | "viral" | "stable" | "declining" | "revived" | "classic";
+export type TrendStatus = "new" | "rising" | "trending" | "viral" | "stable" | "declining" | "revived" | "classic";
 
 export type MemeSource = {
   id: string;
@@ -10,6 +10,7 @@ export type MemeSource = {
   description: string;
   isOriginal: boolean;
   isVerified: boolean;
+  verificationStatus?: string;
 };
 
 export type UsageExample = {

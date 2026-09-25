@@ -1,161 +1,208 @@
-import type { FeedItem, Meme } from "@/lib/types";
+import type { FeedItem, Meme, TrendStatus } from "@/lib/types";
 
-const img = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+type SeedMeme = {
+  id: string;
+  title: string;
+  aliases: string[];
+  trendPeriod: string;
+  trendStatus: TrendStatus;
+  shortDescription: string;
+  meaning: string;
+  origin: string;
+  usage: string[];
+  referenceUrl: string;
+  youtubeUrl: string | null;
+};
 
-const meme = (
-  id: string,
-  title: string,
-  aliases: string[],
-  shortDescription: string,
-  meaning: string,
-  originDescription: string,
-  options: Partial<Meme> & { youtubeVideoId?: string | null; verified?: boolean } = {}
-): Meme => {
-  const feedItem: FeedItem = {
-    id: `${id}-feed`,
-    mediaType: options.youtubeVideoId ? "video" : "image",
-    mediaUrl: options.youtubeVideoId ? img(options.youtubeVideoId) : "/icons/icon.svg",
-    thumbnailUrl: options.youtubeVideoId ? img(options.youtubeVideoId) : "/icons/icon.svg",
-    sourceUrl: options.youtubeVideoId ? `https://www.youtube.com/watch?v=${options.youtubeVideoId}` : "",
-    youtubeVideoId: options.youtubeVideoId || null,
-    youtubeTimestamp: "00:00",
-    shortCaption: shortDescription,
-    trendScore: options.trendScore ?? 70,
-    trendStatus: options.trendStatus ?? "rising",
-    publishedAt: "2026-09-25T00:00:00Z"
-  };
-
-  return {
-    id,
-    slug: id,
-    title,
-    aliases,
-    shortDescription,
-    meaning,
-    originDescription,
-    culturalContext: options.culturalContext || "정확한 단일 원본이 확인되지 않은 경우에는 대표 사용 맥락과 first known popular usage 기준으로 표시합니다.",
-    originDate: options.originDate || "2026",
-    originPlatform: options.originPlatform || "SNS / short-form",
-    originCreator: options.originCreator || "origin not fully verified",
-    thumbnailUrl: feedItem.thumbnailUrl,
-    trendStatus: options.trendStatus || "rising",
-    trendScore: options.trendScore || 70,
-    trendChange24h: options.trendChange24h || 24,
-    toneTags: options.toneTags || ["Funny", "Ironic"],
-    intensity: options.intensity || { Humor: 72, Sarcasm: 38, Aggressiveness: 8 },
-    usageContext: options.usageContext || { Friends: "Good", "Social media": "Good", "Work chat": "Use carefully", Formal: "Avoid" },
-    timeline: options.timeline || [
-      { date: "2026", event: "SNS와 숏폼에서 사용 증가" },
-      { date: "2026.09", event: "검색 가능한 임시 데이터로 추가" }
+const seeds: SeedMeme[] = [
+  {
+    id: "jang-wonyoung-oo",
+    title: "장원영 OO",
+    aliases: ["장원영 밈", "장원영 OO 밈", "밤티 반대말", "원영고치"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "보기 좋고 완성도가 높은 대상 앞에 '장원영'을 붙여 최고의 칭찬처럼 사용하는 밈.",
+    meaning: "촌스럽거나 어설픈 것을 표현하는 '밤티'와 반대되는 개념으로, 예쁘고 세련되거나 완성도가 높은 것을 칭찬할 때 사용한다.",
+    origin: "다마고치 커뮤니티에서 잘 자란 캐릭터를 '원영고치'라고 부르던 표현에서 확장된 것으로 소개된다. 이후 음식, 패션, 사진 등 다양한 대상 앞에 '장원영'을 붙이는 표현으로 확산됐다.",
+    usage: ["장원영 불닭", "오늘 완전 장원영 하루다", "이 인테리어 진짜 장원영이다"],
+    referenceUrl: "https://www.instablank.com/meme/209",
+    youtubeUrl: null
+  },
+  {
+    id: "kinda-chic-to",
+    title: "Kinda Chic To",
+    aliases: ["Kinda Chic To 밈", "하는 게 좀 시크하지", "돈 안 드는 자랑"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "돈이나 명품이 아닌 소소한 습관과 성취를 '시크하다'고 표현하는 캡션형 밈.",
+    meaning: "잘 자는 것, 감정을 잘 조절하는 것, 연락을 제때 하는 것처럼 작지만 긍정적인 행동을 멋있는 일처럼 자랑한다.",
+    origin: "2026년 봄부터 Instagram Reels와 TikTok 등에서 'Kinda chic to...'로 시작하는 문장을 반복하는 포맷이 확산된 것으로 정리된다.",
+    usage: ["Kinda chic to go to bed before midnight.", "Kinda chic to not reply when you're angry.", "일찍 자는 게 좀 시크하지."],
+    referenceUrl: "https://www.instablank.com/meme/226",
+    youtubeUrl: null
+  },
+  {
+    id: "saxophones-are-getting-louder",
+    title: "색소폰이 커지고 있다",
+    aliases: ["Saxophones Are Getting Louder", "색소폰 밈", "불길한 색소폰"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "평범한 상황에 불길한 색소폰 음악을 넣어 곧 큰일이 날 것처럼 연출하는 영상 밈.",
+    meaning: "실제로는 별일 아닌 상황을 영화의 비극적인 장면처럼 과장하는 데 사용한다.",
+    origin: "1991년 영화 'Boyz n the Hood'의 긴장감 있는 장면에 사용된 색소폰 사운드가 밈의 기반으로 소개된다. 이후 TikTok에서 평범한 상황에 해당 음악을 덧붙이는 형태로 재유행했다.",
+    usage: ["월요일 아침 메일함을 여는 순간", "팀장님이 '잠깐 얘기 좀 하자'고 할 때", "시험 결과 확인 버튼을 누르기 직전"],
+    referenceUrl: "https://www.instablank.com/meme/225",
+    youtubeUrl: null
+  },
+  {
+    id: "remember-november-2026",
+    title: "Remember November 2026",
+    aliases: ["Remember November 2026 밈", "AI 북극곰 밈", "11월 북극곰"],
+    trendPeriod: "2026-09",
+    trendStatus: "viral",
+    shortDescription: "AI 북극곰이 'Remember November 2026'을 반복하는 초현실적인 숏폼 밈.",
+    meaning: "특별한 의미가 없는 문장을 마치 거대한 예언이나 사건처럼 비장하게 말하는 데서 웃음을 만든다.",
+    origin: "몇 년 전 게시된 북극곰 AI 이미지 농담과 연결되며, 2026년 8월 말 AI 뮤직비디오 형태의 콘텐츠가 등장한 뒤 숏폼에서 확산된 것으로 소개된다.",
+    usage: ["11월 일정표와 함께 'Remember November 2026'", "11월 만료되는 계약이나 쿠폰을 보여주며 사용", "아무 의미 없는 사건을 예언처럼 과장"],
+    referenceUrl: "https://www.instablank.com/meme/224",
+    youtubeUrl: null
+  },
+  {
+    id: "pogi-hagetseumnida-ani-hagetseumnida",
+    title: "포기하겠습니다… 아니 하겠습니다",
+    aliases: ["9월 포기하겠습니다", "면접 포기 밈", "포기하겠습니다 밈"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "포기했다가 다시 하겠다고 번복하고 다시 포기하는 갈팡질팡 상태를 표현하는 텍스트 밈.",
+    meaning: "결심과 포기를 반복하는 사람의 마음을 과장해서 표현할 때 사용한다.",
+    origin: "면접을 포기하겠다고 했다가 번복하고 다시 포기하는 내용의 문자 캡처가 커뮤니티에서 확산된 것으로 정리된다.",
+    usage: [
+      "다이어트 포기하겠습니다… 아니 다시 하겠습니다… 죄송합니다 그냥 포기하겠습니다.",
+      "공부 열심히 하겠습니다… 아니 잠깐만 쉬겠습니다… 그냥 포기하겠습니다.",
+      "퇴사하겠습니다… 아니 다니겠습니다… 죄송합니다 퇴사하겠습니다."
     ],
-    categories: options.categories || ["Trending Now", "YouTube", "Korean Communities"],
-    relatedMemeIds: options.relatedMemeIds || [],
+    referenceUrl: "https://www.instablank.com/meme/211",
+    youtubeUrl: null
+  },
+  {
+    id: "macaron-malmeok",
+    title: "마카롱 말먹",
+    aliases: ["마카롱 말먹 밈", "마카롱 우유", "마카롱 아아"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "마카롱을 우유나 아이스 아메리카노 등에 담가 먹는 먹방·ASMR 유행.",
+    meaning: "마카롱을 음료에 '말아 먹는' 모습 자체를 시각적·청각적 콘텐츠로 즐기는 트렌드.",
+    origin: "마카롱의 강한 단맛을 줄이기 위해 음료에 적셔 먹는 방식이 먹방 콘텐츠에서 소개되면서 확산된 것으로 정리된다.",
+    usage: ["마카롱을 우유에 담그는 ASMR", "아이스 아메리카노에 마카롱을 넣어 먹기", "색깔별 마카롱 말먹 챌린지"],
+    referenceUrl: "https://www.instablank.com/meme/216",
+    youtubeUrl: null
+  },
+  {
+    id: "gwiin-map",
+    title: "귀인 지도",
+    aliases: ["귀인지도", "사주 귀인", "내 귀인 찾기"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "생년월일을 이용해 자신에게 도움이 되는 사람이나 궁합을 찾고 결과를 공유하는 참여형 콘텐츠.",
+    meaning: "사주 결과를 친구 관계와 연결해 누가 자신의 귀인인지 확인하고 SNS에서 공유하는 놀이.",
+    origin: "생년월일 기반 사주 서비스의 공유 기능이 Instagram Story 등에서 확산되며 참여형 밈처럼 소비됐다.",
+    usage: ["내 귀인 누군지 찾아보기", "스토리에 결과 공유하기", "친구에게 링크를 보내 서로 궁합 확인"],
+    referenceUrl: "https://www.instablank.com/meme/214",
+    youtubeUrl: null
+  },
+  {
+    id: "roblox-geunhwang",
+    title: "로블록스 근황",
+    aliases: ["로블록스 근황 밈", "로블록스 먹방", "로블록스 ASMR"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "로블록스 안에서 벌어지는 기묘하거나 지나치게 현실적인 장면을 '근황'처럼 소개하는 밈.",
+    meaning: "각진 게임 캐릭터가 식사, 춤, ASMR 등 현실적인 활동을 진지하게 하는 모습에서 웃음을 만든다.",
+    origin: "이용자가 직접 다양한 게임을 만드는 Roblox 특성상 기묘한 콘텐츠가 계속 등장했고, 이를 '로블록스 근황'이라는 제목으로 공유하면서 밈화됐다.",
+    usage: ["로블록스에서 혼밥하는 캐릭터", "로블록스 ASMR", "로블록스 캐릭터의 현실적인 일상"],
+    referenceUrl: "https://www.instablank.com/meme/213",
+    youtubeUrl: null
+  },
+  {
+    id: "i-wash",
+    title: "아이워시",
+    aliases: ["아이워시 밈", "LG 워시콤보 걸그룹", "AI DOL"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "세탁기 기능을 걸그룹 멤버처럼 의인화한 LG전자 광고 캠페인이 밈처럼 소비된 사례.",
+    meaning: "평범한 제품 기능을 아이돌 콘셉트와 중독성 있는 노래로 과장해 소개하는 데서 재미를 만든다.",
+    origin: "LG전자의 워시콤보 관련 AI 기능을 5인조 그룹처럼 표현한 광고 캠페인에서 시작됐다.",
+    usage: ["사물의 기능을 아이돌 멤버처럼 소개", "캠페인 음악을 배경음으로 활용", "제품 기능을 그룹 멤버 캐릭터로 패러디"],
+    referenceUrl: "https://www.instablank.com/meme/217",
+    youtubeUrl: null
+  },
+  {
+    id: "google-timeline-visualizer",
+    title: "구글 타임라인 비주얼라이저",
+    aliases: ["구글 타임라인 밈", "이동경로 지도", "타임라인 비주얼라이저"],
+    trendPeriod: "2026-09",
+    trendStatus: "trending",
+    shortDescription: "Google Maps 타임라인 이동 기록을 지도 위에 시각화해 공유하는 인증형 트렌드.",
+    meaning: "자신이 1년 동안 어디를 다녔는지 지도에 표시하고, 여행이 많거나 집-회사만 반복한 모습을 재미있게 공유한다.",
+    origin: "Google Maps의 위치 기록 데이터를 별도의 시각화 방식으로 표현한 결과물을 SNS에 공유하면서 유행했다.",
+    usage: ["1년 이동 경로 인증", "집-회사만 반복한 동선을 자조적으로 공유", "해외여행 이동 경로 자랑"],
+    referenceUrl: "https://www.instablank.com/meme/215",
+    youtubeUrl: null
+  }
+];
+
+export const mockMemes: Meme[] = seeds.map((seed, index) => {
+  const trendScore = seed.trendStatus === "viral" ? 94 : 86 - index;
+  return {
+    id: seed.id,
+    slug: seed.id,
+    title: seed.title,
+    aliases: seed.aliases,
+    shortDescription: seed.shortDescription,
+    meaning: seed.meaning,
+    originDescription: seed.origin,
+    culturalContext: `Reference source: ${seed.referenceUrl}. YouTube 영상은 아직 정확히 검증되지 않아 비워둡니다.`,
+    originDate: seed.trendPeriod,
+    originPlatform: "Instablank reference / SNS",
+    originCreator: "origin not fully verified",
+    thumbnailUrl: "/icons/icon.svg",
+    trendStatus: seed.trendStatus,
+    trendScore,
+    trendChange24h: seed.trendStatus === "viral" ? 140 : 72 - index * 3,
+    toneTags: ["Funny", "Ironic", "Trend-oriented"],
+    intensity: { Humor: 74, Sarcasm: 28, Aggressiveness: 4 },
+    usageContext: { Friends: "Good", "Social media": "Good", "Work chat": "Use carefully", Formal: "Avoid" },
+    timeline: [
+      { date: seed.trendPeriod, event: "2026년 9월 트렌드 목록에 포함" },
+      { date: seed.trendPeriod, event: "reference_url 기반으로 초기 검증 seed에 반영" }
+    ],
+    categories: ["Trending Now", "New", "Korean Communities"],
+    relatedMemeIds: seeds.filter((item) => item.id !== seed.id).slice(0, 3).map((item) => item.id),
     sources: [
       {
-        id: `${id}-source`,
-        sourceType: options.youtubeVideoId ? "youtube" : "community",
-        sourceUrl: feedItem.sourceUrl,
-        youtubeVideoId: options.youtubeVideoId || null,
-        youtubeTimestamp: "00:00",
-        title: options.verified ? "Representative source" : "First known popular usage",
-        description: options.verified ? "대표 영상 또는 확인 가능한 설명 자료입니다." : "원본이 완전히 검증되지 않아 대표 사용 사례로 표시합니다.",
-        isOriginal: Boolean(options.verified),
-        isVerified: Boolean(options.verified)
+        id: `${seed.id}-reference`,
+        sourceType: "article",
+        sourceUrl: seed.referenceUrl,
+        youtubeVideoId: null,
+        youtubeTimestamp: null,
+        title: "Verification reference",
+        description: "초기 검증용 reference_url입니다. 정확히 매칭되는 YouTube 원본은 아직 연결하지 않았습니다.",
+        isOriginal: false,
+        isVerified: true,
+        verificationStatus: "reference_only"
       }
     ],
-    usageExamples: options.usageExamples || [
-      {
-        id: `${id}-usage-1`,
-        situation: "친구가 요즘 표현을 물어볼 때",
-        exampleText: title,
-        explanation: shortDescription,
-        sortOrder: 1
-      },
-      {
-        id: `${id}-usage-2`,
-        situation: "SNS에서 짧게 반응할 때",
-        exampleText: aliases[0] || title,
-        explanation: "친한 사이 또는 가벼운 온라인 맥락에서 사용하는 편이 안전합니다.",
-        sortOrder: 2
-      }
-    ],
-    feedItems: [feedItem],
+    usageExamples: seed.usage.map((text, usageIndex) => ({
+      id: `${seed.id}-usage-${usageIndex + 1}`,
+      situation: usageIndex === 0 ? "일상 대화나 SNS 캡션에서 사용할 때" : "비슷한 맥락으로 응용할 때",
+      exampleText: text,
+      explanation: seed.meaning,
+      sortOrder: usageIndex + 1
+    })),
+    feedItems: [],
     createdAt: "2026-09-25T00:00:00Z",
     updatedAt: "2026-09-25T00:00:00Z"
   };
-};
+});
 
-export const mockMemes: Meme[] = [
-  meme(
-    "wonyoung-thinking",
-    "원영적 사고",
-    ["장원영", "장원영식 긍정", "럭키비키", "완전 럭키비키잖아"],
-    "불리한 상황도 운 좋게 해석하는 초긍정 밈.",
-    "안 좋은 상황에서도 긍정적인 의미를 찾아내는 말투입니다. 억지스럽지만 밝게 뒤집는 점이 웃음 포인트입니다.",
-    "아이브 장원영의 긍정적인 말투와 팬 콘텐츠가 바탕이 되었고, ‘럭키비키’ 표현이 쇼츠와 릴스에서 확산됐습니다.",
-    { originDate: "2024~2026", originPlatform: "K-pop fandom / Shorts", trendScore: 93, trendStatus: "revived", trendChange24h: 182, toneTags: ["Cute", "Encouraging", "Ironic"], relatedMemeIds: ["kinda-chic-to", "jung-gguk-ma"] }
-  ),
-  meme(
-    "kinda-chic-to",
-    "Kinda chic to",
-    ["킨다 시크", "kinda chic", "평범한데 시크", "normal is chic"],
-    "평범한 행동을 고급스럽고 쿨한 라이프스타일처럼 포장하는 밈.",
-    "‘Kinda chic to…’ 뒤에 평범한 행동을 붙여 자조적 자기승인을 만드는 포맷입니다.",
-    "2026년 해외 SNS에서 ‘평범함을 세련됨으로 말하기’ 포맷으로 확산됐고 한국어권에서도 번역/응용 사례가 늘었습니다.",
-    { originDate: "2026.09", originPlatform: "TikTok / X / Instagram", trendScore: 88, trendStatus: "new", trendChange24h: 96, categories: ["Trending Now", "New", "Social media"], relatedMemeIds: ["wonyoung-thinking", "young-creator-crew"] }
-  ),
-  meme(
-    "trend-next",
-    "그럼 다음은 무조건 OO겠지",
-    ["대한민국 유행 훅훅", "다음은 무조건", "두쫀쿠 다음"],
-    "빠르게 바뀌는 유행 다음 차례에 자신이 좋아하는 것을 넣는 소원형 밈.",
-    "초단기 유행 릴레이를 보며 ‘다음 유행은 내가 좋아하는 것’이길 바라는 팬덤식 농담입니다.",
-    "2026년 초 두바이 쫀득쿠키, 봄동비빔밥 등 빠른 먹거리 유행 교체를 두고 X에서 퍼진 포맷으로 알려졌습니다.",
-    { originDate: "2026 상반기", originPlatform: "X / Korean communities", trendScore: 86, trendStatus: "rising", relatedMemeIds: ["kinda-chic-to"] }
-  ),
-  meme(
-    "millennial-vs-genz",
-    "밀레니얼 PR팀 vs 젠지 소셜팀",
-    ["Millennial vs Gen Z", "젠지식 한 줄", "it's giving"],
-    "긴 공식 설명과 짧은 젠지식 감성 문장을 나란히 비교하는 브랜드 밈.",
-    "같은 내용을 장황하게 설명하는 방식과 한 줄 감성으로 말하는 방식을 대비시켜 웃기는 포맷입니다.",
-    "해외 브랜드 SNS 포맷이 2026년 한국 마케팅/커뮤니티로 확산된 사례로 알려졌습니다.",
-    { originDate: "2026.04~06", originPlatform: "Instagram / brand social", trendScore: 81, trendStatus: "viral", categories: ["Trending Now", "Workplace", "Social media"] }
-  ),
-  meme(
-    "jungti-nanda",
-    "중티난다",
-    ["중국스럽다", "중티", "과한 중국 감성", "China-core"],
-    "촌스럽다는 말이 화려하고 콘텐츠감 있는 취향 코드로 재가공된 표현.",
-    "과한 네온, 화려한 비주얼, 중국식 감성이 오히려 사진/숏폼 콘텐츠로 소비되는 흐름을 말합니다.",
-    "2026년 중국 브랜드/공간 소비 트렌드와 함께 SNS에서 ‘중티난다’가 장난스러운 취향 코드로 언급됐습니다.",
-    { originDate: "2026", originPlatform: "SNS / lifestyle media", trendScore: 76, trendStatus: "rising", categories: ["Trending Now", "Social media"] }
-  ),
-  meme(
-    "young-creator-crew",
-    "영크크 / 늙크크",
-    ["영크크", "늙크크", "Young Creator Crew", "트렌드 못 따라감"],
-    "트렌드를 잘 따라가는 사람과 못 따라가는 사람을 장난스럽게 나누는 표현.",
-    "‘영크크’는 젊고 창작자적인 감각, ‘늙크크’는 트렌드에 뒤처진 느낌을 자조적으로 말할 때 씁니다.",
-    "코르티스 팬덤 표현이 방송 노출과 숏폼을 거치며 2026년에 다시 넓게 회자된 흐름으로 보는 편이 안전합니다.",
-    { originDate: "2026 revival", originPlatform: "Fandom / TV / Shorts", trendScore: 78, trendStatus: "revived", categories: ["Trending Now", "Celebrities", "YouTube"] }
-  ),
-  meme("bamti", "밤티", ["밤티나다", "살짝 밤티", "촌스러움 밈"], "어설프거나 촌스러운 결과물을 가볍게 놀릴 때 쓰는 표현.", "완성도가 낮거나 어딘가 어설픈 느낌을 귀엽게 놀리는 말입니다.", "2026년 신조어/숏폼 목록에서 자주 언급되지만 단일 원본은 추가 검증이 필요합니다.", { trendStatus: "new", trendScore: 69 }),
-  meme("shagal", "아 샤갈", ["샤갈", "욕 대신 샤갈", "아 샤갈!"], "강한 욕설 대신 비슷한 발음의 감탄사로 어이없음을 표현.", "화나거나 어이없는 순간 수위를 낮춰 말하는 대체 감탄사입니다.", "유튜브/숏폼 감탄사 밈으로 소개되지만 원본 영상은 추가 검증이 필요합니다.", { trendStatus: "new", trendScore: 67 }),
-  meme("jung-gguk-ma", "중꺾마", ["중요한 건 꺾이지 않는 마음", "꺾이지 않는 마음", "unbreakable heart"], "계속 실패해도 포기하지 않는 태도를 응원할 때 쓰는 말.", "결과가 좋지 않아도 다시 시도하는 태도를 가볍고 따뜻하게 응원합니다.", "2022년 DRX 월즈 우승 서사와 함께 대중적으로 퍼진 e스포츠 밈입니다.", { originDate: "2022", originPlatform: "eSports", trendStatus: "classic", trendScore: 74, toneTags: ["Encouraging", "Funny"] }),
-  meme("algga-no", "알빠노", ["알 바 아니고", "내 알 바냐", "알빠임"], "관심 없거나 신경 쓰지 않겠다는 태도를 거칠게 줄여 말하는 표현.", "무관심, 거리두기, 냉소를 강하게 드러냅니다. 공격적으로 들릴 수 있습니다.", "2020년대 초반 온라인 커뮤니티와 게임 채팅에서 짧고 센 반응으로 퍼졌습니다.", { originDate: "2021~2022", trendStatus: "stable", trendScore: 63, toneTags: ["Sarcastic", "Mocking", "Aggressive"] }),
-  meme("king-batne", "킹받네", ["개킹받네", "킹받음", "열받네"], "짜증나는데 웃기기도 할 때 쓰는 말.", "진심으로 화난다기보다 얄밉고 어이없어서 웃긴 상황에 자주 씁니다.", "인터넷 방송과 커뮤니티에서 ‘킹’을 붙여 강조하는 말투가 확산되며 대중화됐습니다.", { originDate: "2019~2020", trendStatus: "classic", trendScore: 72 }),
-  meme("form-michyeotta", "폼 미쳤다", ["폼 미침", "form is insane", "폼 crazy"], "실력, 분위기, 외모, 결과물이 매우 좋을 때 쓰는 칭찬.", "누군가의 컨디션이나 결과물이 최고조라는 뜻입니다.", "스포츠 팬덤의 ‘폼’ 표현이 쇼츠 리액션과 결합해 대중화됐습니다.", { trendStatus: "viral", trendScore: 85, toneTags: ["Encouraging", "Funny"] }),
-  meme("mal-a-doe", "말아줘", ["한 번 말아줘", "제대로 말아줘", "감성 있게 말아줘"], "무언가를 센스 있게 해달라고 부탁하거나 기대할 때 쓰는 표현.", "‘제대로 만들어줘’, ‘멋지게 해줘’에 가까운 요청입니다.", "K-pop 팬덤과 쇼츠 편집 문화에서 특정 분위기를 ‘말아준다’고 표현하며 퍼졌습니다.", { trendStatus: "rising", trendScore: 79 }),
-  meme("dopamine", "도파민", ["도파민 터진다", "도파민 중독", "dopamine hit"], "자극적이고 재미있어서 계속 보게 되는 상황.", "강한 재미와 자극을 주는 콘텐츠를 뜻합니다.", "숏폼 플랫폼과 커뮤니티에서 자극적인 콘텐츠 소비를 설명하는 말로 확산됐습니다.", { trendStatus: "viral", trendScore: 84 }),
-  meme("cat-confused", "어리둥절 고양이", ["confused cat", "고양이 당황짤", "cat looking confused meme"], "상황을 이해하지 못했을 때 쓰는 고양이 반응짤.", "예상 밖 상황이나 이해 안 되는 말을 들었을 때 표정으로 당황을 전달합니다.", "여러 고양이 반응 이미지가 SNS에서 반복 사용되며 하나의 포맷처럼 굳어졌습니다.", { trendStatus: "classic", trendScore: 58, categories: ["Animals", "Classic"] }),
-  meme("teuk", "~특", ["특", "국룰 특", "특징"], "어떤 사람이나 상황의 특징을 짧게 꼬집는 포맷.", "특정 대상의 전형적인 특징을 나열하는 밈 문법입니다.", "커뮤니티 제목 문법에서 시작해 유튜브 댓글, 쇼츠 자막으로 넓어졌습니다.", { trendStatus: "stable", trendScore: 62 }),
-  meme("gukrule", "국룰", ["국민 룰", "이건 국룰", "must-do"], "모두가 당연하게 여기는 비공식 규칙.", "공식 규칙은 아니지만 많은 사람이 당연하다고 느끼는 습관이나 조합을 말합니다.", "게임과 커뮤니티에서 농담처럼 부르던 말이 음식 조합과 생활 습관으로 확장됐습니다.", { trendStatus: "classic", trendScore: 60 }),
-  meme("hyun-ta", "현타", ["현실 자각 타임", "현타옴", "reality check"], "몰입이 깨지고 갑자기 현실을 자각하는 상태.", "신나게 하던 일이 갑자기 허무하게 느껴지거나 자기 행동을 돌아보게 될 때 씁니다.", "커뮤니티 줄임말로 시작해 현재는 일상 허무함 표현으로 일반화됐습니다.", { trendStatus: "classic", trendScore: 54 }),
-  meme("nae-il-ui-na", "내일의 나", ["미래의 나", "tomorrow me", "다음주의 나"], "오늘 미룬 일을 미래의 자신에게 넘길 때 쓰는 자조 밈.", "귀찮은 일을 미루면서 책임을 미래의 자신에게 맡기는 표현입니다.", "직장인 공감 콘텐츠와 SNS에서 오래 쓰인 자기비하 문법입니다.", { trendStatus: "stable", trendScore: 66, categories: ["Workplace", "School"] }),
-  meme("shibal-cost", "시발비용", ["스트레스 소비", "rage spending", "화풀이 소비"], "스트레스를 풀려고 충동적으로 쓰는 돈.", "화나거나 지쳤을 때 기분을 달래려고 쓰는 돈을 뜻합니다. 표현이 거칠어 공식 대화에는 맞지 않습니다.", "직장인 커뮤니티와 SNS에서 스트레스성 소비를 설명하는 말로 확산됐습니다.", { trendStatus: "stable", trendScore: 65, categories: ["Workplace"] })
-];
-
-export const mockFeedItems = mockMemes
-  .flatMap((meme) => meme.feedItems.map((item) => ({ item, meme })))
-  .sort((a, b) => b.item.trendScore - a.item.trendScore);
+export const mockFeedItems: { item: FeedItem; meme: Meme }[] = [];

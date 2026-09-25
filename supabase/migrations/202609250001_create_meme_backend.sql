@@ -21,7 +21,7 @@ create table if not exists public.memes (
   origin_platform text,
   origin_creator text,
   thumbnail_url text,
-  trend_status text not null default 'stable' check (trend_status in ('new','rising','viral','stable','declining','revived','classic')),
+  trend_status text not null default 'stable' check (trend_status in ('new','rising','trending','viral','stable','declining','revived','classic')),
   trend_score integer not null default 0 check (trend_score between 0 and 100),
   trend_change_24h integer not null default 0,
   tone_tags text[] not null default '{}',
@@ -54,6 +54,7 @@ create table if not exists public.meme_sources (
   source_description text,
   is_original boolean not null default false,
   is_verified boolean not null default false,
+  verification_status text not null default 'reference_only' check (verification_status in ('verified','reference_only','origin_not_verified','representative')),
   created_at timestamptz not null default now()
 );
 
@@ -78,7 +79,7 @@ create table if not exists public.meme_feed_items (
   youtube_timestamp text,
   short_caption text,
   trend_score integer not null default 0 check (trend_score between 0 and 100),
-  trend_status text not null default 'stable' check (trend_status in ('new','rising','viral','stable','declining','revived','classic')),
+  trend_status text not null default 'stable' check (trend_status in ('new','rising','trending','viral','stable','declining','revived','classic')),
   published_at timestamptz not null default now(),
   created_at timestamptz not null default now()
 );

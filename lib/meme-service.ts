@@ -41,6 +41,7 @@ type MemeRow = {
     source_description: string | null;
     is_original: boolean;
     is_verified: boolean;
+    verification_status?: string | null;
   }[];
   meme_usage_examples?: {
     id: string;
@@ -229,7 +230,8 @@ function toSource(row: NonNullable<MemeRow["meme_sources"]>[number]): MemeSource
     title: row.source_title || "Source",
     description: row.source_description || "",
     isOriginal: row.is_original,
-    isVerified: row.is_verified
+    isVerified: row.is_verified,
+    verificationStatus: row.verification_status || (row.is_verified ? "verified" : "reference_only")
   };
 }
 
