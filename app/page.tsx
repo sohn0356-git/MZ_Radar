@@ -132,8 +132,8 @@ export default function Home() {
       <main className="app-shell">
         <div className="topbar">
           <div>
-            <p className="eyebrow">MZ Radar</p>
-            <h1>밈레이더</h1>
+            <p className="eyebrow">Meme Radar</p>
+            <h1>Meme Radar</h1>
           </div>
           <InstallPrompt />
         </div>

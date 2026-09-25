@@ -11,8 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
   const icon512 = `${basePath}/icons/icon-512.png`;
 
   return {
-    name: "밈레이더 - Meme Radar",
-    short_name: "밈레이더",
+    name: "Meme Radar",
+    short_name: "Meme Radar",
     description: "Never miss the meme everyone is talking about.",
     id: scope,
     start_url: `${basePath}/?source=pwa`,

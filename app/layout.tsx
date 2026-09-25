@@ -5,14 +5,14 @@ import { AppProviders } from "@/components/app-providers";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export const metadata: Metadata = {
-  title: "밈레이더",
+  title: "Meme Radar",
   description: "요즘 모두가 말하는 밈을 놓치지 마세요.",
-  applicationName: "밈레이더",
+  applicationName: "Meme Radar",
   manifest: `${basePath}/manifest.webmanifest`,
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "밈레이더"
+    title: "Meme Radar"
   },
   icons: {
     icon: [
