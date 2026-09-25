@@ -1,23 +1,36 @@
 "use client";
 
-import { Bookmark, Clock, History, Search } from "lucide-react";
-import { Meme, memes } from "@/lib/memes";
-import { MemeCard } from "@/components/meme-card";
+import { Bookmark, Clock, History, LogIn, LogOut, Search } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
+import type { Meme } from "@/lib/types";
+import { avatarFor } from "@/components/use-auth";
 
 const collections = ["Favorites", "Funny", "Work", "Friends", "Reactions"];
 
 export function ProfileView({
+  memes,
   savedMemes,
   savedIds,
   viewedIds,
   searches,
+  user,
+  displayName,
+  authConfigured,
+  onSignIn,
+  onSignOut,
   onOpenMeme,
   onToggleSave
 }: {
+  memes: Meme[];
   savedMemes: Meme[];
   savedIds: string[];
   viewedIds: string[];
   searches: string[];
+  user: User | null;
+  displayName: string;
+  authConfigured: boolean;
+  onSignIn: () => void;
+  onSignOut: () => void;
   onOpenMeme: (meme: Meme) => void;
   onToggleSave: (id: string) => void;
 }) {
@@ -30,11 +43,19 @@ export function ProfileView({
   return (
     <section>
       <div className="profile-panel profile-hero">
-        <div className="avatar">밈</div>
+        <div className="avatar">{avatarFor(user) ? <img src={avatarFor(user)} alt="" /> : "밈"}</div>
         <div>
           <p className="eyebrow">Profile</p>
-          <h2 style={{ margin: "2px 0 6px" }}>Meme Explorer</h2>
-          <p className="muted" style={{ margin: 0 }}>요즘 밈을 천천히 따라잡는 중입니다.</p>
+          <h2 style={{ margin: "2px 0 6px" }}>{displayName}</h2>
+          <p className="muted" style={{ margin: 0 }}>
+            {user ? "Saved memes and history are synced to your profile." : "Browse freely. Sign in when you want to save memes."}
+          </p>
+          {authConfigured && (
+            <button className="secondary-btn" type="button" onClick={user ? onSignOut : onSignIn} style={{ marginTop: 10 }}>
+              {user ? <LogOut size={17} /> : <LogIn size={17} />}
+              {user ? "Sign out" : "Continue with Google"}
+            </button>
+          )}
         </div>
       </div>
 
@@ -65,15 +86,12 @@ export function ProfileView({
 
       <div className="profile-panel">
         <h2>Saved Memes</h2>
-        <div className="result-grid">
+        <div className="image-grid">
           {(savedMemes.length ? savedMemes : memes.slice(0, 4)).map((meme) => (
-            <MemeCard
-              key={meme.id}
-              meme={meme}
-              saved={savedIds.includes(meme.id)}
-              onOpen={onOpenMeme}
-              onToggleSave={onToggleSave}
-            />
+            <button className="image-grid-item" key={meme.id} type="button" onClick={() => onOpenMeme(meme)}>
+              <img src={meme.thumbnailUrl} alt="" />
+              <span>{meme.title}</span>
+            </button>
           ))}
         </div>
       </div>

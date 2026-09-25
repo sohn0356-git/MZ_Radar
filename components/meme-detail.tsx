@@ -1,24 +1,34 @@
 "use client";
 
 import { ArrowLeft, Bookmark, ExternalLink, Play, Share2 } from "lucide-react";
-import { Meme, relatedFor } from "@/lib/memes";
+import type { Meme } from "@/lib/types";
 import { MemeCard } from "@/components/meme-card";
 
 export function MemeDetail({
   meme,
+  memes,
   savedIds,
   onBack,
   onToggleSave,
   onOpenMeme
 }: {
   meme: Meme;
+  memes: Meme[];
   savedIds: string[];
   onBack: () => void;
   onToggleSave: (id: string) => void;
   onOpenMeme: (meme: Meme) => void;
 }) {
   const saved = savedIds.includes(meme.id);
-  const related = relatedFor(meme);
+  const related = meme.relatedMemeIds
+    .map((id) => memes.find((candidate) => candidate.id === id))
+    .filter(Boolean) as Meme[];
+  const primarySource = meme.sources.find((source) => source.isOriginal) || meme.sources[0];
+  const primaryFeedItem = meme.feedItems[0];
+  const heroImage = primaryFeedItem?.thumbnailUrl || meme.thumbnailUrl;
+  const youtubeUrl = primarySource?.youtubeVideoId
+    ? `https://www.youtube.com/embed/${primarySource.youtubeVideoId}${primarySource.youtubeTimestamp ? `?start=${timestampToSeconds(primarySource.youtubeTimestamp)}` : ""}`
+    : primarySource?.sourceUrl || "";
 
   return (
     <div className="detail">
@@ -49,7 +59,7 @@ export function MemeDetail({
       </div>
 
       <section className="hero-media">
-        <img src={meme.mediaUrl} alt="" />
+        <img src={heroImage} alt="" />
         <div className="hero-overlay">
           <div className="badge-row">
             <span className="badge hot">{meme.trendStatus}</span>
@@ -61,11 +71,12 @@ export function MemeDetail({
       </section>
 
       <Section title="What does this meme mean?">
-        <p>{meme.fullDescription}</p>
+        <p>{meme.meaning}</p>
       </Section>
 
       <Section title="Origin">
         <p>{meme.originDescription}</p>
+        <p style={{ marginTop: 10 }}>{meme.culturalContext}</p>
         <div className="badge-row" style={{ marginTop: 12 }}>
           <span className="badge">{meme.originDate}</span>
           <span className="badge">{meme.originPlatform}</span>
@@ -74,18 +85,27 @@ export function MemeDetail({
       </Section>
 
       <Section title="Original YouTube Video">
-        <a className="video-thumb" href={meme.youtubeVideoUrl} target="_blank" rel="noreferrer">
-          <img src={meme.thumbnailUrl} alt="" />
-          <span>
-            <Play size={16} fill="currentColor" />
-            Watch from {meme.youtubeTimestamp}
-          </span>
+        <div className="video-embed">
+          {primarySource?.youtubeVideoId ? (
+            <iframe
+              src={`${youtubeUrl}${youtubeUrl.includes("?") ? "&" : "?"}rel=0&playsinline=1`}
+              title={primarySource.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <img src={heroImage} alt="" />
+          )}
+        </div>
+        <a className="secondary-btn" href={primarySource?.sourceUrl || "#"} target="_blank" rel="noreferrer" style={{ marginTop: 10 }}>
+          <Play size={16} fill="currentColor" />
+          Open in YouTube
         </a>
         <p style={{ marginTop: 10 }}>
-          {meme.videoTitle} · {meme.channel}
+          {primarySource?.title || "Source"} · {primarySource?.sourceType || "reference"}
           <br />
-          <a href={meme.originalSourceUrl} target="_blank" rel="noreferrer">
-            First known popular usage <ExternalLink size={14} style={{ verticalAlign: "-2px" }} />
+          <a href={primarySource?.sourceUrl || "#"} target="_blank" rel="noreferrer">
+            {primarySource?.isVerified ? "Verified source" : "First known popular usage"} <ExternalLink size={14} style={{ verticalAlign: "-2px" }} />
           </a>
         </p>
       </Section>
@@ -94,7 +114,8 @@ export function MemeDetail({
         {meme.usageExamples.map((example) => (
           <div className="example" key={example.situation}>
             <strong>Situation: {example.situation}</strong>
-            <p>{example.conversation}</p>
+            <p>{example.exampleText}</p>
+            {example.explanation && <p style={{ marginTop: 8 }}>{example.explanation}</p>}
           </div>
         ))}
       </Section>
@@ -155,6 +176,12 @@ export function MemeDetail({
       </Section>
     </div>
   );
+}
+
+function timestampToSeconds(timestamp: string) {
+  const parts = timestamp.split(":").map((part) => Number(part));
+  if (parts.some(Number.isNaN)) return 0;
+  return parts.reduce((total, part) => total * 60 + part, 0);
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

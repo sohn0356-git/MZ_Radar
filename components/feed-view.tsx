@@ -2,17 +2,15 @@
 
 import { Bookmark, Share2, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Meme, categories, memes } from "@/lib/memes";
-
-const feedCategories = categories.filter((category) =>
-  ["Trending Now", "New", "Revived", "Classic", "Gaming", "YouTube", "Streamers", "Celebrities", "Sports", "Workplace", "School", "Animals", "Korean Communities"].includes(category)
-);
+import type { FeedItem, Meme } from "@/lib/types";
 
 export function FeedView({
+  items,
   savedIds,
   onToggleSave,
   onOpenMeme
 }: {
+  items: { item: FeedItem; meme: Meme }[];
   savedIds: string[];
   onToggleSave: (id: string) => void;
   onOpenMeme: (meme: Meme) => void;
@@ -22,11 +20,15 @@ export function FeedView({
   const [muted, setMuted] = useState(true);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const items = useMemo(() => {
-    const base = memes.filter((meme) => meme.categories.includes(category));
-    const ordered = (base.length ? base : memes).sort((a, b) => b.trendScore - a.trendScore);
+  const feedCategories = useMemo(
+    () => ["Trending Now", ...Array.from(new Set(items.flatMap(({ meme }) => meme.categories))).filter((item) => item !== "Trending Now")],
+    [items]
+  );
+  const visibleItems = useMemo(() => {
+    const base = category === "Trending Now" ? items : items.filter(({ meme }) => meme.categories.includes(category));
+    const ordered = base.length ? base : items;
     return [...ordered, ...ordered, ...ordered];
-  }, [category]);
+  }, [category, items]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -58,9 +60,10 @@ export function FeedView({
         ))}
       </div>
       <div className="feed-list" ref={containerRef}>
-        {items.map((meme, index) => (
+        {visibleItems.map(({ item, meme }, index) => (
           <FeedCard
-            key={`${meme.id}-${index}`}
+            key={`${item.id}-${index}`}
+            item={item}
             meme={meme}
             active={index === activeIndex}
             muted={muted}
@@ -76,6 +79,7 @@ export function FeedView({
 }
 
 function FeedCard({
+  item,
   meme,
   active,
   muted,
@@ -84,6 +88,7 @@ function FeedCard({
   onToggleSave,
   onOpen
 }: {
+  item: FeedItem;
   meme: Meme;
   active: boolean;
   muted: boolean;
@@ -92,11 +97,13 @@ function FeedCard({
   onToggleSave: () => void;
   onOpen: () => void;
 }) {
-  const embedSrc = `${meme.youtubeVideoUrl}${meme.youtubeVideoUrl.includes("?") ? "&" : "?"}autoplay=1&mute=${muted ? 1 : 0}&playsinline=1&controls=0&loop=1`;
+  const embedSrc = item.youtubeVideoId
+    ? `https://www.youtube.com/embed/${item.youtubeVideoId}?autoplay=1&mute=${muted ? 1 : 0}&playsinline=1&controls=0&rel=0${item.youtubeTimestamp ? `&start=${timestampToSeconds(item.youtubeTimestamp)}` : ""}`
+    : "";
 
   return (
     <article className="feed-card">
-      {active && meme.mediaType === "video" ? (
+      {active && item.mediaType === "video" && embedSrc ? (
         <iframe
           className="feed-video"
           src={embedSrc}
@@ -105,15 +112,15 @@ function FeedCard({
           allowFullScreen
         />
       ) : (
-        <img src={meme.mediaUrl} alt="" loading={active ? "eager" : "lazy"} />
+        <img src={item.thumbnailUrl} alt="" loading={active ? "eager" : "lazy"} />
       )}
       <button className="sound-chip" type="button" onClick={onToggleMute}>
         {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
       <div className="feed-info">
-        <span className="badge hot">{meme.trendStatus} · Trend Score {meme.trendScore}</span>
+        <span className="badge hot">{item.trendStatus} · Trend Score {item.trendScore}</span>
         <h2>{meme.title}</h2>
-        <p>{meme.shortDescription}</p>
+        <p>{item.shortCaption || meme.shortDescription}</p>
         <button className="primary-btn" type="button" onClick={onOpen}>
           Learn More
         </button>
@@ -133,4 +140,10 @@ function FeedCard({
       </div>
     </article>
   );
+}
+
+function timestampToSeconds(timestamp: string) {
+  const parts = timestamp.split(":").map((part) => Number(part));
+  if (parts.some(Number.isNaN)) return 0;
+  return parts.reduce((total, part) => total * 60 + part, 0);
 }

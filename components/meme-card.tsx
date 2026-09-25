@@ -1,7 +1,7 @@
 "use client";
 
 import { Bookmark, TrendingUp } from "lucide-react";
-import type { Meme } from "@/lib/memes";
+import type { Meme } from "@/lib/types";
 
 export function MemeCard({
   meme,
