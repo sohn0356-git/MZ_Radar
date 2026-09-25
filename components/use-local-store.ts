@@ -7,6 +7,14 @@ type StoreState = {
   savedIds: string[];
   viewedIds: string[];
   searches: string[];
+  suggestions: {
+    title: string;
+    aliases: string;
+    meaning: string;
+    origin: string;
+    referenceUrl: string;
+    createdAt: string;
+  }[];
 };
 
 const key = "mz-radar-store";
@@ -14,7 +22,8 @@ const initial: StoreState = {
   onboarded: false,
   savedIds: ["jung-gguk-ma", "wonyoung-thinking"],
   viewedIds: [],
-  searches: []
+  searches: [],
+  suggestions: []
 };
 
 export function useLocalStore() {
@@ -60,11 +69,19 @@ export function useLocalStore() {
     setState((current) => ({ ...current, onboarded: true }));
   }, []);
 
+  const addSuggestion = useCallback((suggestion: Omit<StoreState["suggestions"][number], "createdAt">) => {
+    setState((current) => ({
+      ...current,
+      suggestions: [{ ...suggestion, createdAt: new Date().toISOString() }, ...current.suggestions].slice(0, 20)
+    }));
+  }, []);
+
   return {
     ...state,
     toggleSave,
     addViewed,
     addSearch,
-    finishOnboarding
+    finishOnboarding,
+    addSuggestion
   };
 }

@@ -169,9 +169,9 @@ export const mockMemes: Meme[] = seeds.map((seed, index) => {
     trendStatus: seed.trendStatus,
     trendScore,
     trendChange24h: seed.trendStatus === "viral" ? 140 : 72 - index * 3,
-    toneTags: ["Funny", "Ironic", "Trend-oriented"],
-    intensity: { Humor: 74, Sarcasm: 28, Aggressiveness: 4 },
-    usageContext: { Friends: "Good", "Social media": "Good", "Work chat": "Use carefully", Formal: "Avoid" },
+    toneTags: ["웃김", "아이러니", "트렌드형"],
+    intensity: { 유머: 74, 풍자: 28, 공격성: 4 },
+    usageContext: { 친구: "좋음", SNS: "좋음", 업무채팅: "주의", 공식문서: "피하기" },
     timeline: [
       { date: seed.trendPeriod, event: "2026년 9월 트렌드 목록에 포함" },
       { date: seed.trendPeriod, event: "reference_url 기반으로 초기 검증 seed에 반영" }
@@ -185,7 +185,7 @@ export const mockMemes: Meme[] = seeds.map((seed, index) => {
         sourceUrl: seed.referenceUrl,
         youtubeVideoId: null,
         youtubeTimestamp: null,
-        title: "Verification reference",
+        title: "검증 참고자료",
         description: "초기 검증용 reference_url입니다. 정확히 매칭되는 YouTube 원본은 아직 연결하지 않았습니다.",
         isOriginal: false,
         isVerified: true,

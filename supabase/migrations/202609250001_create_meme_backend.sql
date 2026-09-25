@@ -107,6 +107,19 @@ create table if not exists public.search_history (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.meme_edit_suggestions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete set null,
+  suggestion_type text not null check (suggestion_type in ('create','update')),
+  status text not null default 'pending' check (status in ('pending','approved','rejected')),
+  target_meme_id uuid references public.memes(id) on delete set null,
+  payload jsonb not null,
+  reviewer_id uuid references auth.users(id) on delete set null,
+  review_note text,
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+
 create index if not exists memes_title_trgm_idx on public.memes using gin (title gin_trgm_ops);
 create index if not exists memes_categories_idx on public.memes using gin (categories);
 create index if not exists meme_aliases_alias_trgm_idx on public.meme_aliases using gin (alias gin_trgm_ops);
@@ -123,6 +136,7 @@ alter table public.meme_feed_items enable row level security;
 alter table public.saved_memes enable row level security;
 alter table public.meme_view_history enable row level security;
 alter table public.search_history enable row level security;
+alter table public.meme_edit_suggestions enable row level security;
 
 create policy "Public can read memes" on public.memes for select using (true);
 create policy "Public can read aliases" on public.meme_aliases for select using (true);
@@ -137,6 +151,8 @@ create policy "Users can update own profile" on public.profiles for update using
 create policy "Users can manage own saved memes" on public.saved_memes for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "Users can manage own view history" on public.meme_view_history for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "Users can manage own search history" on public.search_history for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "Users can create own meme suggestions" on public.meme_edit_suggestions for insert with check (auth.uid() = user_id);
+create policy "Users can read own meme suggestions" on public.meme_edit_suggestions for select using (auth.uid() = user_id);
 
 create or replace function public.handle_new_user()
 returns trigger

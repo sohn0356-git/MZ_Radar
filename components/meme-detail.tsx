@@ -3,6 +3,8 @@
 import { ArrowLeft, Bookmark, ExternalLink, FileText, Play, Share2 } from "lucide-react";
 import type { Meme } from "@/lib/types";
 import { MemeCard } from "@/components/meme-card";
+import { SafeImage } from "@/components/safe-image";
+import { labelForTrend } from "@/lib/labels";
 
 export function MemeDetail({
   meme,
@@ -35,14 +37,14 @@ export function MemeDetail({
       <div className="detail-header">
         <button className="secondary-btn" type="button" onClick={onBack}>
           <ArrowLeft size={18} />
-          Back
+          뒤로
         </button>
         <div style={{ display: "flex", gap: 8 }}>
           <button
             className="icon-btn"
             type="button"
-            title="Share"
-            aria-label="Share meme"
+            title="공유"
+            aria-label="공유"
             onClick={() => navigator.share?.({ title: meme.title, text: meme.shortDescription })}
           >
             <Share2 size={18} />
@@ -53,28 +55,28 @@ export function MemeDetail({
             onClick={() => onToggleSave(meme.id)}
           >
             <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
-            {saved ? "Saved" : "Save"}
+            {saved ? "저장됨" : "저장"}
           </button>
         </div>
       </div>
 
       <section className="hero-media">
-        <img src={heroImage} alt="" />
+        <SafeImage src={heroImage} label={meme.title} loading="eager" />
         <div className="hero-overlay">
           <div className="badge-row">
-            <span className="badge hot">{meme.trendStatus}</span>
-            <span className="badge">Trending {meme.trendChange24h > 0 ? "+" : ""}{meme.trendChange24h}% in 24h</span>
+            <span className="badge hot">{labelForTrend(meme.trendStatus)}</span>
+            <span className="badge">24시간 {meme.trendChange24h > 0 ? "+" : ""}{meme.trendChange24h}%</span>
           </div>
           <h2>{meme.title}</h2>
           <p>{meme.shortDescription}</p>
         </div>
       </section>
 
-      <Section title="What does this meme mean?">
+      <Section title="무슨 뜻인가요?">
         <p>{meme.meaning}</p>
       </Section>
 
-      <Section title="Origin">
+      <Section title="유래와 맥락">
         <p>{meme.originDescription}</p>
         <p style={{ marginTop: 10 }}>{meme.culturalContext}</p>
         <div className="badge-row" style={{ marginTop: 12 }}>
@@ -84,7 +86,7 @@ export function MemeDetail({
         </div>
       </Section>
 
-      <Section title="Original YouTube Video">
+      <Section title="출처와 영상">
         {primarySource?.youtubeVideoId ? (
           <>
             <div className="video-embed">
@@ -97,14 +99,14 @@ export function MemeDetail({
             </div>
             <a className="secondary-btn" href={primarySource.sourceUrl} target="_blank" rel="noreferrer" style={{ marginTop: 10 }}>
               <Play size={16} fill="currentColor" />
-              Open in YouTube
+              유튜브에서 열기
             </a>
           </>
         ) : (
           <div className="reference-panel">
             <FileText size={22} />
             <div>
-              <strong>No verified YouTube video yet</strong>
+              <strong>검증된 유튜브 영상이 아직 없습니다</strong>
               <p>정확히 매칭되는 원본/대표 영상이 확인되기 전까지 앱은 임의 영상을 재생하지 않습니다.</p>
             </div>
           </div>
@@ -112,29 +114,29 @@ export function MemeDetail({
         {primarySource?.youtubeVideoId ? null : primarySource?.sourceUrl ? (
           <a className="secondary-btn" href={primarySource.sourceUrl} target="_blank" rel="noreferrer" style={{ marginTop: 10 }}>
             <ExternalLink size={16} />
-            Open reference
+            검증 출처 열기
           </a>
         ) : null}
         <p style={{ marginTop: 10 }}>
-          {primarySource?.title || "Source"} · {primarySource?.sourceType || "reference"}
+          {primarySource?.title || "출처"} · {sourceTypeLabel(primarySource?.sourceType)}
           <br />
           <a href={primarySource?.sourceUrl || "#"} target="_blank" rel="noreferrer">
-            {primarySource?.isVerified ? "Verified source" : "First known popular usage"} <ExternalLink size={14} style={{ verticalAlign: "-2px" }} />
+            {primarySource?.isVerified ? "검증 참고자료" : "초기 사용 사례"} <ExternalLink size={14} style={{ verticalAlign: "-2px" }} />
           </a>
         </p>
       </Section>
 
-      <Section title="How To Use It">
+      <Section title="이렇게 씁니다">
         {meme.usageExamples.map((example) => (
           <div className="example" key={example.situation}>
-            <strong>Situation: {example.situation}</strong>
+            <strong>상황: {example.situation}</strong>
             <p>{example.exampleText}</p>
             {example.explanation && <p style={{ marginTop: 8 }}>{example.explanation}</p>}
           </div>
         ))}
       </Section>
 
-      <Section title="Usage Tone">
+      <Section title="말투와 강도">
         <div className="badge-row">
           {meme.toneTags.map((tag) => (
             <span className="badge" key={tag}>{tag}</span>
@@ -153,7 +155,7 @@ export function MemeDetail({
         </div>
       </Section>
 
-      <Section title="Where It Is Appropriate">
+      <Section title="어디서 쓰면 좋나요?">
         <div className="context-grid">
           {Object.entries(meme.usageContext).map(([place, guidance]) => (
             <div className="context-item" key={place}>
@@ -164,7 +166,7 @@ export function MemeDetail({
         </div>
       </Section>
 
-      <Section title="Meme Timeline">
+      <Section title="밈 흐름">
         <div className="timeline">
           {meme.timeline.map((item) => (
             <div className="timeline-item" key={`${item.date}-${item.event}`}>
@@ -175,7 +177,7 @@ export function MemeDetail({
         </div>
       </Section>
 
-      <Section title="Related Memes">
+      <Section title="관련 밈">
         <div className="result-grid">
           {related.map((item) => (
             <MemeCard
@@ -190,6 +192,14 @@ export function MemeDetail({
       </Section>
     </div>
   );
+}
+
+function sourceTypeLabel(type?: string) {
+  if (type === "article") return "참고자료";
+  if (type === "youtube") return "유튜브";
+  if (type === "community") return "커뮤니티";
+  if (type === "social_media") return "SNS";
+  return "출처";
 }
 
 function timestampToSeconds(timestamp: string) {

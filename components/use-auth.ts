@@ -53,7 +53,7 @@ export function useAuth() {
 }
 
 export function displayNameFor(user: User | null) {
-  return user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Meme Explorer";
+  return user?.user_metadata?.full_name || user?.email?.split("@")[0] || "밈 탐험가";
 }
 
 export function avatarFor(user: User | null) {

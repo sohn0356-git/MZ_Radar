@@ -17,10 +17,12 @@ import {
   isUsingMockData,
   recordSearch,
   recordView,
+  submitMemeSuggestion,
   toggleSavedMeme
 } from "@/lib/meme-service";
 import { mockFeedItems, mockMemes } from "@/lib/mock-data";
 import type { FeedItem, Meme } from "@/lib/types";
+import type { MemeSuggestionInput } from "@/lib/types";
 import { useEffect } from "react";
 
 export type Tab = "search" | "feed" | "profile";
@@ -126,6 +128,20 @@ export default function Home() {
     recordSearch(auth.user?.id || null, query, selectedMemeId);
   };
 
+  const suggestMeme = async (input: MemeSuggestionInput) => {
+    if (isUsingMockData || !auth.user) {
+      store.addSuggestion(input);
+      return "local" as const;
+    }
+    try {
+      await submitMemeSuggestion(auth.user.id, input);
+      return "remote" as const;
+    } catch {
+      store.addSuggestion(input);
+      return "local" as const;
+    }
+  };
+
   return (
     <>
       {!store.onboarded && <Onboarding onComplete={store.finishOnboarding} />}
@@ -139,16 +155,15 @@ export default function Home() {
         </div>
         {!isUsingMockData && !auth.configured && (
           <section className="detail-section">
-            <h3>Supabase setup required</h3>
+            <h3>Supabase 설정 필요</h3>
             <p>
-              Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in your deployment
-              environment, then run the Supabase migrations and seed data.
+              배포 환경에 Supabase URL과 publishable key를 설정한 뒤 migration과 seed SQL을 실행하세요.
             </p>
           </section>
         )}
         {dataError && (
           <section className="detail-section">
-            <h3>Data load failed</h3>
+            <h3>데이터를 불러오지 못했습니다</h3>
             <p>{dataError}</p>
           </section>
         )}
@@ -162,6 +177,7 @@ export default function Home() {
             savedIds={savedIds}
             onToggleSave={toggleSave}
             onSearch={saveSearch}
+            onSuggestMeme={suggestMeme}
           />
         )}
         {tab === "feed" && (

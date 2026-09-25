@@ -4,11 +4,11 @@ import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 const steps = [
-  { title: "Memes move fast.", body: "놓친 밈도 몇 초 안에 뜻과 맥락을 확인하세요." },
-  { title: "Don't get left behind.", body: "지금 뜨는 표현을 부담 없이 따라잡을 수 있습니다." },
-  { title: "Search what you don't understand.", body: "정확한 이름을 몰라도 상황과 문장으로 찾아보세요." },
-  { title: "Swipe through what's trending.", body: "짧은 피드로 요즘 쓰이는 밈을 계속 발견하세요." },
-  { title: "Stay in the loop.", body: "마음에 드는 밈은 저장하고 나만의 컬렉션으로 관리하세요." }
+  { title: "밈은 너무 빨리 바뀝니다.", body: "놓친 표현도 몇 초 안에 뜻과 맥락을 확인하세요." },
+  { title: "이름을 몰라도 괜찮아요.", body: "사람, 상황, 들은 단어 일부만 입력해도 찾을 수 있습니다." },
+  { title: "출처를 확인합니다.", body: "검증되지 않은 영상은 억지로 붙이지 않습니다." },
+  { title: "요즘 흐름을 넘겨보세요.", body: "검증된 짧은 콘텐츠가 생기면 피드에서 빠르게 볼 수 있습니다." },
+  { title: "내가 궁금한 밈을 모아두세요.", body: "저장하고 다시 보면서 나만의 밈 감각을 업데이트하세요." }
 ];
 
 export function Onboarding({ onComplete }: { onComplete: () => void }) {
@@ -20,7 +20,7 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
     <div className="onboarding" role="dialog" aria-modal="true">
       <section className="onboarding-card">
         <div>
-          <p className="eyebrow">Never miss the meme everyone is talking about.</p>
+          <p className="eyebrow">Meme Radar</p>
           <h2>{step.title}</h2>
           <p className="muted">{step.body}</p>
         </div>
@@ -36,7 +36,7 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
             type="button"
             onClick={() => (final ? onComplete() : setIndex((current) => current + 1))}
           >
-            {final ? "Start Exploring" : "Next"}
+            {final ? "시작하기" : "다음"}
             <ArrowRight size={18} />
           </button>
         </div>

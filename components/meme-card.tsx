@@ -1,6 +1,8 @@
 "use client";
 
 import { Bookmark, TrendingUp } from "lucide-react";
+import { SafeImage } from "@/components/safe-image";
+import { labelForTrend } from "@/lib/labels";
 import type { Meme } from "@/lib/types";
 
 export function MemeCard({
@@ -17,7 +19,7 @@ export function MemeCard({
   return (
     <article className="meme-card" onClick={() => onOpen(meme)} role="button" tabIndex={0}>
       <div className="thumb">
-        <img src={meme.thumbnailUrl} alt="" loading="lazy" />
+        <SafeImage src={meme.thumbnailUrl} label={meme.title} />
       </div>
       <div className="card-copy">
         <div className="card-head">
@@ -25,8 +27,8 @@ export function MemeCard({
           <button
             className="icon-btn"
             type="button"
-            aria-label={saved ? "Unsave meme" : "Save meme"}
-            title={saved ? "Unsave" : "Save"}
+            aria-label={saved ? "저장 취소" : "저장"}
+            title={saved ? "저장 취소" : "저장"}
             onClick={(event) => {
               event.stopPropagation();
               onToggleSave(meme.id);
@@ -39,9 +41,9 @@ export function MemeCard({
         <div className="badge-row">
           <span className="badge hot">
             <TrendingUp size={13} />
-            {meme.trendStatus}
+            {labelForTrend(meme.trendStatus)}
           </span>
-          <span className="badge">Score {meme.trendScore}</span>
+          <span className="badge">지수 {meme.trendScore}</span>
           <span className="badge">{meme.trendChange24h > 0 ? "+" : ""}{meme.trendChange24h}%</span>
         </div>
       </div>

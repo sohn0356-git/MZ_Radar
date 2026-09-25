@@ -51,16 +51,16 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       {
-        name: "Search memes",
-        short_name: "Search",
-        description: "Find a meme by phrase or situation",
+        name: "밈 검색",
+        short_name: "검색",
+        description: "이름, 문장, 상황으로 밈 찾기",
         url: `${basePath}/?tab=search`,
         icons: [{ src: icon192, sizes: "192x192", type: "image/png" }]
       },
       {
-        name: "Trending feed",
-        short_name: "Feed",
-        description: "Swipe through trending memes",
+        name: "트렌드 피드",
+        short_name: "피드",
+        description: "요즘 밈 넘겨보기",
         url: `${basePath}/?tab=feed`,
         icons: [{ src: icon192, sizes: "192x192", type: "image/png" }]
       }

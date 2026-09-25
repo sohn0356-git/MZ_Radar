@@ -60,9 +60,9 @@ upserted as (
     trend_status,
     case when trend_status = 'viral' then 94 else 86 end,
     case when trend_status = 'viral' then 140 else 72 end,
-    array['Funny','Ironic','Trend-oriented'],
-    '{"Humor":74,"Sarcasm":28,"Aggressiveness":4}'::jsonb,
-    '{"Friends":"Good","Social media":"Good","Work chat":"Use carefully","Formal":"Avoid"}'::jsonb,
+    array['웃김','아이러니','트렌드형'],
+    '{"유머":74,"풍자":28,"공격성":4}'::jsonb,
+    '{"친구":"좋음","SNS":"좋음","업무채팅":"주의","공식문서":"피하기"}'::jsonb,
     jsonb_build_array(
       jsonb_build_object('date', trend_period, 'event', '2026년 9월 트렌드 목록에 포함'),
       jsonb_build_object('date', trend_period, 'event', 'reference_url 기반으로 초기 검증 seed에 반영')
@@ -137,7 +137,7 @@ select
   s.reference_url,
   null,
   null,
-  'Verification reference',
+  '검증 참고자료',
   '초기 검증용 reference_url입니다. 정확히 매칭되는 YouTube 원본은 아직 연결하지 않았습니다.',
   false,
   true,

@@ -72,3 +72,11 @@ export type UserProfile = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type MemeSuggestionInput = {
+  title: string;
+  aliases: string;
+  meaning: string;
+  origin: string;
+  referenceUrl: string;
+};

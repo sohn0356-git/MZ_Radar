@@ -4,8 +4,9 @@ import { Bookmark, Clock, History, LogIn, LogOut, Search } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import type { Meme } from "@/lib/types";
 import { avatarFor } from "@/components/use-auth";
+import { SafeImage } from "@/components/safe-image";
 
-const collections = ["Favorites", "Funny", "Work", "Friends", "Reactions"];
+const collections = ["즐겨찾기", "웃긴 밈", "직장", "친구", "리액션"];
 
 export function ProfileView({
   memes,
@@ -45,51 +46,51 @@ export function ProfileView({
       <div className="profile-panel profile-hero">
         <div className="avatar">{avatarFor(user) ? <img src={avatarFor(user)} alt="" /> : "밈"}</div>
         <div>
-          <p className="eyebrow">Profile</p>
+          <p className="eyebrow">내 정보</p>
           <h2 style={{ margin: "2px 0 6px" }}>{displayName}</h2>
           <p className="muted" style={{ margin: 0 }}>
-            {user ? "Saved memes and history are synced to your profile." : "Browse freely. Sign in when you want to save memes."}
+            {user ? "저장한 밈과 기록이 프로필에 연결됩니다." : "로그인 없이 둘러보고, 저장이 필요할 때만 로그인하세요."}
           </p>
           {authConfigured && (
             <button className="secondary-btn" type="button" onClick={user ? onSignOut : onSignIn} style={{ marginTop: 10 }}>
               {user ? <LogOut size={17} /> : <LogIn size={17} />}
-              {user ? "Sign out" : "Continue with Google"}
+              {user ? "로그아웃" : "구글로 계속하기"}
             </button>
           )}
         </div>
       </div>
 
       <div className="profile-panel">
-        <h2>User Meme Stats</h2>
+        <h2>나의 밈 감각</h2>
         <div className="stats-grid">
-          <Stat icon={<Clock size={18} />} value={viewedIds.length || 84} label="viewed this week" />
-          <Stat icon={<Bookmark size={18} />} value={savedIds.length} label="saved memes" />
-          <Stat icon={<History size={18} />} value={workplaceCount || 3} label="workplace picks" />
-          <Stat icon={<Search size={18} />} value={memeAge} label="Meme Age" />
+          <Stat icon={<Clock size={18} />} value={viewedIds.length || 84} label="이번 주 조회" />
+          <Stat icon={<Bookmark size={18} />} value={savedIds.length} label="저장한 밈" />
+          <Stat icon={<History size={18} />} value={workplaceCount || 3} label="직장 밈" />
+          <Stat icon={<Search size={18} />} value={memeAge} label="밈 나이" />
         </div>
         <p className="muted" style={{ marginBottom: 0 }}>
-          {memeAge <= 28 ? "You're keeping up with current trends." : "You may have missed a few recent memes, but it is recoverable."}
+          {memeAge <= 28 ? "요즘 흐름을 잘 따라가고 있어요." : "최근 밈 몇 개만 따라잡으면 금방 회복됩니다."}
         </p>
       </div>
 
       <div className="profile-panel">
-        <h2>Collections</h2>
+        <h2>컬렉션</h2>
         <div className="collection-list">
           {collections.map((collection, index) => (
             <div className="collection" key={collection}>
               <strong>{collection}</strong>
-              <span className="badge">{Math.max(0, savedIds.length - index)} memes</span>
+              <span className="badge">{Math.max(0, savedIds.length - index)}개</span>
             </div>
           ))}
         </div>
       </div>
 
       <div className="profile-panel">
-        <h2>Saved Memes</h2>
+        <h2>저장한 밈</h2>
         <div className="image-grid">
           {(savedMemes.length ? savedMemes : memes.slice(0, 4)).map((meme) => (
             <button className="image-grid-item" key={meme.id} type="button" onClick={() => onOpenMeme(meme)}>
-              <img src={meme.thumbnailUrl} alt="" />
+              <SafeImage src={meme.thumbnailUrl} label={meme.title} />
               <span>{meme.title}</span>
             </button>
           ))}
@@ -97,7 +98,7 @@ export function ProfileView({
       </div>
 
       <div className="profile-panel">
-        <h2>Recently Viewed</h2>
+        <h2>최근 본 밈</h2>
         <div className="badge-row">
           {(viewedMemes.length ? viewedMemes : memes.slice(4, 10)).map((meme) => (
             <button className="chip" type="button" key={meme.id} onClick={() => onOpenMeme(meme)}>
@@ -108,7 +109,7 @@ export function ProfileView({
       </div>
 
       <div className="profile-panel">
-        <h2>Search History</h2>
+        <h2>검색 기록</h2>
         <div className="badge-row">
           {(searches.length ? searches : ["중꺾마", "킹받네 뜻", "cat looking confused meme"]).map((item) => (
             <span className="badge" key={item}>{item}</span>

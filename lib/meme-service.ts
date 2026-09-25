@@ -2,7 +2,7 @@
 
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { mockFeedItems, mockMemes } from "@/lib/mock-data";
-import type { FeedItem, Meme, MemeSource, UsageExample } from "@/lib/types";
+import type { FeedItem, Meme, MemeSource, MemeSuggestionInput, UsageExample } from "@/lib/types";
 
 const useMockData = process.env.NEXT_PUBLIC_USE_SUPABASE === "false" || !isSupabaseConfigured;
 export const isUsingMockData = useMockData;
@@ -164,6 +164,28 @@ export async function fetchUserHistory(userId: string) {
   };
 }
 
+export async function submitMemeSuggestion(userId: string | null, input: MemeSuggestionInput) {
+  if (useMockData || !supabase || !userId) return false;
+  const aliases = input.aliases
+    .split(",")
+    .map((alias) => alias.trim())
+    .filter(Boolean);
+  const { error } = await supabase.from("meme_edit_suggestions").insert({
+    user_id: userId,
+    suggestion_type: "create",
+    status: "pending",
+    payload: {
+      title: input.title.trim(),
+      aliases,
+      meaning: input.meaning.trim(),
+      origin: input.origin.trim(),
+      reference_url: input.referenceUrl.trim()
+    }
+  });
+  if (error) throw error;
+  return true;
+}
+
 export function searchMemes(memes: Meme[], query: string, category = "All") {
   const normalizedQuery = normalize(query);
   const words = query.toLowerCase().split(/[\s,]+/).filter(Boolean);
@@ -227,7 +249,7 @@ function toSource(row: NonNullable<MemeRow["meme_sources"]>[number]): MemeSource
     sourceUrl: row.source_url,
     youtubeVideoId: row.youtube_video_id,
     youtubeTimestamp: row.youtube_timestamp,
-    title: row.source_title || "Source",
+    title: row.source_title || "출처",
     description: row.source_description || "",
     isOriginal: row.is_original,
     isVerified: row.is_verified,

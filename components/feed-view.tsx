@@ -3,6 +3,8 @@
 import { Bookmark, Share2, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FeedItem, Meme } from "@/lib/types";
+import { SafeImage } from "@/components/safe-image";
+import { labelForCategory, labelForTrend } from "@/lib/labels";
 
 export function FeedView({
   items,
@@ -55,14 +57,14 @@ export function FeedView({
               containerRef.current?.scrollTo({ top: 0 });
             }}
           >
-            {item}
+          {labelForCategory(item)}
           </button>
         ))}
       </div>
       {!visibleItems.length && (
         <div className="feed-empty">
-          <strong>No verified feed media yet</strong>
-          <p>정확한 이미지나 영상 소스가 확인된 밈만 피드에 표시합니다.</p>
+          <strong>검증된 피드 미디어가 아직 없습니다</strong>
+          <p>정확한 이미지나 영상 출처가 확인된 밈만 피드에 표시합니다.</p>
         </div>
       )}
       {visibleItems.length > 0 && (
@@ -120,27 +122,27 @@ function FeedCard({
           allowFullScreen
         />
       ) : (
-        <img src={item.thumbnailUrl} alt="" loading={active ? "eager" : "lazy"} />
+        <SafeImage src={item.thumbnailUrl} label={meme.title} loading={active ? "eager" : "lazy"} />
       )}
       <button className="sound-chip" type="button" onClick={onToggleMute}>
         {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
       <div className="feed-info">
-        <span className="badge hot">{item.trendStatus} · Trend Score {item.trendScore}</span>
+        <span className="badge hot">{labelForTrend(item.trendStatus)} · 지수 {item.trendScore}</span>
         <h2>{meme.title}</h2>
         <p>{item.shortCaption || meme.shortDescription}</p>
         <button className="primary-btn" type="button" onClick={onOpen}>
-          Learn More
+          자세히 보기
         </button>
       </div>
       <div className="feed-actions">
-        <button className="icon-btn" type="button" onClick={onToggleSave} aria-label={saved ? "Unsave meme" : "Save meme"}>
+        <button className="icon-btn" type="button" onClick={onToggleSave} aria-label={saved ? "저장 취소" : "저장"}>
           <Bookmark size={21} fill={saved ? "currentColor" : "none"} />
         </button>
         <button
           className="icon-btn"
           type="button"
-          aria-label="Share meme"
+          aria-label="공유"
           onClick={() => navigator.share?.({ title: meme.title, text: meme.shortDescription })}
         >
           <Share2 size={21} />
